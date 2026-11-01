@@ -2,6 +2,7 @@ import { Lora } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 // Lora Font Setup
 const lora = Lora({
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
           <main className="flex-1">
             {children}
           </main>
+          <Footer/>
       </body>
     </html>
   );

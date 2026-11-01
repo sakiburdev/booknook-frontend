@@ -1,3 +1,4 @@
+import CommunitySection from "@/components/home/CommunitySection";
 import HeroSlider from "@/components/home/HeroSlider";
 import { Suspense } from "react";
 
@@ -18,6 +19,9 @@ export default function Home() {
       <Suspense fallback={<HeroFallback />}>
         <HeroSlider />
       </Suspense>
+
+      <CommunitySection />
+
     </main>
   );
 }

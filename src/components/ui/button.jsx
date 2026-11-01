@@ -49,6 +49,9 @@ function Button({
     <ButtonPrimitive
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
+      // render এ <Link> এর মতো non-button element দিলে Base UI warning এড়াতে
+      // nativeButton=false লাগে — সাধারণ button এ default true থাকে
+      nativeButton={props.render ? false : true}
       {...props}
     />
   )

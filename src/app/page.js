@@ -1,5 +1,6 @@
 import CommunitySection from "@/components/home/CommunitySection";
 import HeroSlider from "@/components/home/HeroSlider";
+import WhyBookNook from "@/components/home/WhyBookNook";
 import { Suspense } from "react";
 
 // Hero slider loading fallback
@@ -20,6 +21,7 @@ export default function Home() {
         <HeroSlider />
       </Suspense>
 
+      <WhyBookNook />
       <CommunitySection />
 
     </main>

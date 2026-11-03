@@ -1,4 +1,3 @@
-import BookForm from "@/components/forms/BookForm";
 import CommunitySection from "@/components/home/CommunitySection";
 import HeroSlider from "@/components/home/HeroSlider";
 import WhyBookNook from "@/components/home/WhyBookNook";
@@ -22,7 +21,6 @@ export default function Home() {
         <HeroSlider />
       </Suspense>
 
-      <BookForm/>
       <WhyBookNook />
       <CommunitySection />
 

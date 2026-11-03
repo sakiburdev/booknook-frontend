@@ -28,9 +28,15 @@ const sendRequest = async (path, options = {}) => {
 };
 
 export const fetchBooks = () => sendRequest("/books");
+
 export const fetchBook = (id) => sendRequest(`/books/${id}`);
 
-
+export const addBook = async (bookData) => {
+  return sendAuthRequest("/books", {
+    method: "POST",
+    body: JSON.stringify(bookData),
+  });
+};
 
 export const updateBook = async (id, bookData) => {
   return sendAuthRequest(`/books/${id}`, {
@@ -45,7 +51,6 @@ export const deleteBook = async (id) => {
   });
 };
 
-
 export const borrowBook = async (bookId, returnDate) => {
   return sendAuthRequest("/borrows", {
     method: "POST",
@@ -53,5 +58,13 @@ export const borrowBook = async (bookId, returnDate) => {
       bookId,
       returnDate,
     }),
+  });
+};
+
+export const fetchMyBorrows = () => sendAuthRequest("/borrows");
+
+export const returnBook = async (borrowId) => {
+  return sendAuthRequest(`/borrows/${borrowId}`, {
+    method: "DELETE",
   });
 };

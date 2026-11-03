@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
-  DialogDescription, 
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -136,7 +136,7 @@ export default function MyBooksView() {
             <Button render={<Link href="/add-book" />}>Add a book</Button>
           </EmptyState>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {myBooks.map((book) => (
               <MyBookCard
                 key={book._id}
@@ -194,7 +194,7 @@ function BooksPageSkeleton() {
       <div className="mt-2 h-9 w-56 animate-pulse rounded-md bg-muted" />
       <div className="h-5 w-80 animate-pulse rounded-md bg-muted" />
 
-      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 4 }).map((_, index) => (
           <BookCardSkeleton key={index} />
         ))}

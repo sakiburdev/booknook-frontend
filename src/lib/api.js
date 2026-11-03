@@ -1,3 +1,5 @@
+import { authClient } from "@/lib/auth-client";
+
 const API_URL = "http://localhost:8000";
 
 const sendRequest = async (path, options = {}) => {
@@ -24,6 +26,43 @@ const sendRequest = async (path, options = {}) => {
     ok: response.ok,
     status: response.status,
     data,
+  };
+};
+
+const sendAuthRequest = async (path, options = {}) => {
+  const { data, error } = await authClient.token();
+
+  if (error || !data?.token) {
+    return {
+      ok: false,
+      status: 401,
+      data: { message: "Please login first" },
+    };
+  }
+
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+      Authorization: `Bearer ${data.token}`,
+    },
+  });
+
+  const responseText = await response.text();
+
+  let result = null;
+
+  try {
+    result = responseText ? JSON.parse(responseText) : null;
+  } catch {
+    result = { message: responseText };
+  }
+
+  return {
+    ok: response.ok,
+    status: response.status,
+    data: result,
   };
 };
 

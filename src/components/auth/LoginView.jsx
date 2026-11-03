@@ -14,7 +14,7 @@ const LoginView = () => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const redirectTarget = searchParams.get("redirect");
+  const redirectTarget = searchParams.get("redirect") || "/";
 
   const { data: session, isPending } = authClient.useSession();
 

@@ -1,5 +1,4 @@
 import { Lora } from "next/font/google";
-import { Suspense } from "react";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";

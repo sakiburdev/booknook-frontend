@@ -27,7 +27,24 @@ const sendRequest = async (path, options = {}) => {
   };
 };
 
+export const fetchBooks = () => sendRequest("/books");
 export const fetchBook = (id) => sendRequest(`/books/${id}`);
+
+
+
+export const updateBook = async (id, bookData) => {
+  return sendAuthRequest(`/books/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(bookData),
+  });
+};
+
+export const deleteBook = async (id) => {
+  return sendAuthRequest(`/books/${id}`, {
+    method: "DELETE",
+  });
+};
+
 
 export const borrowBook = async (bookId, returnDate) => {
   return sendAuthRequest("/borrows", {

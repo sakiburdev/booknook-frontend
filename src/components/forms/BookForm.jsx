@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Image from "next/image";
+import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { User2, Mail } from "lucide-react";
+import { BookOpen, ImagePlus, User2, Mail } from "lucide-react";
 
 const categories = [
   "Fiction",
@@ -30,21 +32,64 @@ const categories = [
 ];
 
 const BookForm = ({ book, user, onSubmit, disabled }) => {
-const isEdit = Boolean(book);
+  const isEdit = Boolean(book);
 
   const [form, setForm] = useState({
-    title: book?.title,
-    author: book?.author,
-    image: book?.image,
-    category: book?.category,
-    description: book?.description,
+    title: book?.title ?? "",
+    author: book?.author ?? "",
+    image: book?.image ?? "",
+    category: book?.category ?? "",
+    description: book?.description ?? "",
     totalCopies: book?.totalCopies ?? 1,
   });
 
   const [copiesError, setCopiesError] = useState("");
 
+  // ImgBB upload
+  const fileInputRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
+
   const handleChange = (field) => (value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCoverUpload = async (event) => {
+    const file = event.target.files?.[0];
+
+    event.target.value = "";
+
+    if (!file) return;
+
+    const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+
+    if (!apiKey) {
+      toast.error("Image upload is not configured");
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const body = new FormData();
+      body.append("image", file);
+
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${apiKey}`,
+        { method: "POST", body },
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result?.success || !result?.data?.url) {
+        throw new Error(result?.error?.message || "Image upload failed");
+      }
+
+      handleChange("image")(result.data.url);
+    } catch (error) {
+      toast.error(error.message || "Image upload failed");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = (event) => {
@@ -71,7 +116,6 @@ const isEdit = Boolean(book);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-
       {user && (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
@@ -173,17 +217,53 @@ const isEdit = Boolean(book);
         </div>
       </div>
 
-      {/* Book Cover Image URL */}
+      {/* Book Cover Image — ImgBB upload */}
       <div className="space-y-2">
-        <Label htmlFor="image">Book Cover Image URL</Label>
-        <Input
+        <Label htmlFor="image">Book Cover Image</Label>
+
+        <input
           id="image"
-          type="url"
-          placeholder="https://example.com/cover.jpg"
-          value={form.image}
-          onChange={(event) => handleChange("image")(event.target.value)}
-          required
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleCoverUpload}
         />
+
+        <div className="flex items-center gap-3">
+          {/* Preview */}
+          <div className="relative size-16 shrink-0 overflow-hidden rounded-xl border bg-muted">
+            {form.image ? (
+              <Image
+                src={form.image}
+                alt="Book cover preview"
+                fill
+                unoptimized
+                className="object-cover"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <BookOpen className="size-6 text-muted-foreground/40" />
+              </div>
+            )}
+          </div>
+
+          <div className="min-w-0">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading || disabled}
+            >
+              <ImagePlus className="size-4" />
+              {uploading ? "Uploading..." : "Upload cover"}
+            </Button>
+
+            <p className="mt-1.5 truncate text-xs text-muted-foreground">
+              {form.image || "JPG, PNG or WEBP — hosted on ImgBB"}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Description */}

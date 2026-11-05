@@ -3,7 +3,6 @@ import { authClient } from "@/lib/auth-client";
 const API_URL = "http://localhost:8000";
 
 const sendRequest = async (path, options = {}) => {
-
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {
@@ -68,7 +67,16 @@ const sendAuthRequest = async (path, options = {}) => {
 
 export const fetchBooks = () => sendRequest("/books");
 
-export const fetchBook = (id) => sendRequest(`/books/${id}`);
+export const fetchMyBooks = () => sendAuthRequest("/books/mine");
+
+export const fetchBook = (id, token) =>
+  token
+    ? sendRequest(`/books/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    : sendAuthRequest(`/books/${id}`);
 
 export const addBook = async (bookData) => {
   return sendAuthRequest("/books", {

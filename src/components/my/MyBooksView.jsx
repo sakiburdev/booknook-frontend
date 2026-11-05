@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { fetchBooks, deleteBook, updateBook } from "@/lib/api";
+import { fetchMyBooks, deleteBook, updateBook } from "@/lib/api";
 import { BookCardSkeleton } from "@/components/shared/BookCard";
 import { EmptyState, ErrorState } from "@/components/shared/EmptyState";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
@@ -28,9 +28,9 @@ export default function MyBooksView() {
     setLoading(true);
     setError(false);
 
-    fetchBooks().then(({ ok, data }) => {
+    fetchMyBooks().then(({ ok, data }) => {
       if (ok) {
-        setMyBooks(data);
+        setMyBooks(Array.isArray(data) ? data : []);
       } else {
         setError(true);
       }
@@ -70,7 +70,6 @@ export default function MyBooksView() {
 
     if (ok) {
       toast.success(data.message);
-
       setEditingBook(null);
       loadBooks();
     } else {
@@ -93,7 +92,6 @@ export default function MyBooksView() {
 
     if (ok) {
       toast.success(data.message);
-
       setDeletingBook(null);
       loadBooks();
     } else {
@@ -107,7 +105,7 @@ export default function MyBooksView() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="max-w-xl">
         <p className="text-sm font-medium text-primary">Your shelf</p>
 
@@ -154,7 +152,7 @@ export default function MyBooksView() {
         open={Boolean(editingBook)}
         onOpenChange={(open) => !open && setEditingBook(null)}
       >
-        <DialogContent>
+        <DialogContent className="w-[calc(100%-2rem)] max-w-4xl sm:max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit “{editingBook?.title}”</DialogTitle>
 
@@ -189,10 +187,10 @@ export default function MyBooksView() {
 // Page Loading Skeleton
 function BooksPageSkeleton() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="h-4 w-24 animate-pulse rounded-full bg-muted" />
       <div className="mt-2 h-9 w-56 animate-pulse rounded-md bg-muted" />
-      <div className="h-5 w-80 animate-pulse rounded-md bg-muted" />
+      <div className="h-5 w-80 max-w-full animate-pulse rounded-md bg-muted" />
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 4 }).map((_, index) => (
@@ -206,7 +204,7 @@ function BooksPageSkeleton() {
 function MyBookCard({ book, onEdit, onDelete }) {
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-2xl border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-      <div className="relative aspect-[4/4] w-full bg-muted">
+      <div className="relative aspect-[3/4] w-full bg-muted">
         {book.image ? (
           <Image
             src={book.image}

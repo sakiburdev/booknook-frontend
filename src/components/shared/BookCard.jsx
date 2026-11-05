@@ -2,15 +2,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen } from "lucide-react";
 
 const BookCard = ({ book }) => {
- return (
+  return (
     <Card className="group flex h-full flex-col overflow-hidden pt-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10">
       <CardHeader className="p-3 pb-0">
-        <div className="relative aspect-[5/4] w-full overflow-hidden rounded-xl bg-muted">
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl bg-muted">
           {book.image ? (
             <Image
               src={book.image}
@@ -38,27 +44,22 @@ const BookCard = ({ book }) => {
           {book.title}
         </CardTitle>
         <p className="text-sm text-muted-foreground">by {book.author}</p>
-
-        {/* Short description */}
-        {book.description ? (
-          <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-            {book.description}
-          </p>
-        ) : null}
       </CardContent>
 
       <CardFooter className="mt-auto items-center justify-between">
         {/* Available copies */}
         {book.totalCopies > 0 ? (
           <p className="text-sm font-medium text-primary">
-            {book.totalCopies}{" "}
-            {book.totalCopies === 1 ? "copy" : "copies"} available
+            {book.totalCopies} {book.totalCopies === 1 ? "copy" : "copies"}{" "}
+            available
           </p>
         ) : (
           <Badge variant="destructive">Not available</Badge>
         )}
 
-        <Button render={<Link href={`/books/${book._id}`} />}>Details</Button>
+        <Button render={<Link href={`/books/${book._id}`} />}>
+          View Details
+        </Button>
       </CardFooter>
     </Card>
   );

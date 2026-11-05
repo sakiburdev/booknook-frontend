@@ -176,7 +176,7 @@ export default function HeroSlider() {
                       {slide.tag}
                     </span>
 
-                    <h1 className="max-w-2xl text-4xl font-extrabold leading-tight text-white drop-shadow-lg md:text-6xl">
+                    <h1 className="max-w-2xl text-3xl font-extrabold leading-tight text-white drop-shadow-lg sm:text-4xl md:text-6xl">
                       {slide.heading}
                     </h1>
 

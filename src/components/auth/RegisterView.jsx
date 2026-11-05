@@ -34,8 +34,8 @@ const RegisterView = () => {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    image: "",
     password: "",
-    confirm: "",
   });
 
   const [passwordError, setPasswordError] = useState("");
@@ -43,9 +43,9 @@ const RegisterView = () => {
 
   useEffect(() => {
     if (!isPending && session?.user) {
-      router.replace("/");
+      window.location.href = "/";
     }
-  }, [isPending, session, router]);
+  }, [isPending, session]);
 
   // Change Handler
   const handleChange = (event) => {
@@ -56,10 +56,6 @@ const RegisterView = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (form.password !== form.confirm) {
-      setPasswordError("Passwords do not match");
-      return;
-    }
     const message = validatePassword(form.password);
 
     if (message) {
@@ -74,6 +70,7 @@ const RegisterView = () => {
       name: form.name.trim(),
       email: form.email,
       password: form.password,
+      image: form.image.trim(),
     });
 
     setSubmitting(false);
@@ -84,7 +81,7 @@ const RegisterView = () => {
     }
 
     toast.success("Account created. Welcome to BookNook!");
-    router.replace("/");
+    window.location.href = "/";
   };
 
   // Google register
@@ -145,7 +142,21 @@ const RegisterView = () => {
             />
           </div>
 
-          {/* Password — validation rules সহ */}
+          {/* Photo URL */}
+          <div className="space-y-2">
+            <label htmlFor="image" className="text-sm font-medium">
+              Photo URL
+            </label>
+            <Input
+              id="image"
+              type="url"
+              placeholder="https://example.com/your-photo.jpg"
+              value={form.image}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Password */}
           <div className="space-y-2">
             <label htmlFor="password" className="text-sm font-medium">
               Password
@@ -167,21 +178,6 @@ const RegisterView = () => {
             <p className="text-xs text-muted-foreground">
               At least 6 characters with one uppercase and one lowercase letter.
             </p>
-          </div>
-
-          {/* Confirm Password */}
-          <div className="space-y-2">
-            <label htmlFor="confirm" className="text-sm font-medium">
-              Confirm password
-            </label>
-            <Input
-              id="confirm"
-              type="password"
-              placeholder= "confirm your password"
-              value={form.confirm}
-              onChange={handleChange}
-              required
-            />
           </div>
 
           <Button type="submit" className="w-full" disabled={submitting}>

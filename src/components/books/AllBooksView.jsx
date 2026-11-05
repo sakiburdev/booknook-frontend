@@ -99,7 +99,7 @@ const AllBooksView = () => {
   const shownBooks = visibleBooks.slice(0, visibleCount);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="max-w-xl">
         <p className="text-sm font-medium text-primary">The whole collection</p>
 

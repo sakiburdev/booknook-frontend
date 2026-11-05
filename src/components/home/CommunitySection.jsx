@@ -12,7 +12,7 @@ const CommunitySection = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
         viewport={{ once: true }}
-        className="relative overflow-hidden rounded-3xl border bg-[radial-gradient(100%_140%_at_0%_0%,var(--color-primary)_0%,transparent_55%)] p-[3px] before:absolute before:inset-0 before:bg-[radial-gradient(100%_140%_at_100%_100%,var(--color-primary)_0%,transparent_55%)] before:content-[''] "
+        className="relative overflow-hidden rounded-3xl border bg-[radial-gradient(100%_140%_at_0%_0%,var(--color-primary)_0%,transparent_55%)] p-[3px] before:absolute before:inset-0 before:pointer-events-none before:bg-[radial-gradient(100%_140%_at_100%_100%,var(--color-primary)_0%,transparent_55%)] before:content-[''] "
       >
         <div className="rounded-[calc(1.5rem-1px)] bg-background px-6 py-14 text-center md:px-16">
           <Quote className="mx-auto size-8 text-primary/60" />

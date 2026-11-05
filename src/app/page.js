@@ -1,8 +1,15 @@
 import CommunitySection from "@/components/home/CommunitySection";
 import HeroSlider from "@/components/home/HeroSlider";
+import HowItWorks from "@/components/home/HowItWorks";
 import LatestBooks from "@/components/home/LatestBooks";
 import WhyBookNook from "@/components/home/WhyBookNook";
 import { Suspense } from "react";
+
+export const metadata = {
+  title: "Home | BookNook",
+  description:
+    "Welcome to BookNook - discover great books, borrow them with one click, and manage your reading collection.",
+};
 
 // Hero slider loading fallback
 function HeroFallback() {
@@ -21,10 +28,10 @@ export default function Home() {
       <Suspense fallback={<HeroFallback />}>
         <HeroSlider />
       </Suspense>
-      <LatestBooks/>
+      <LatestBooks />
+      <HowItWorks />
       <WhyBookNook />
       <CommunitySection />
-
     </main>
   );
 }

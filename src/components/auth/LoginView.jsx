@@ -10,11 +10,18 @@ import { Separator } from "@/components/ui/separator";
 import { BookOpen } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
+const getSafeRedirect = (target) =>
+  typeof target === "string" &&
+  target.startsWith("/") &&
+  !target.startsWith("//")
+    ? target
+    : "/";
+
 const LoginView = () => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const redirectTarget = searchParams.get("redirect") || "/";
+  const redirectTarget = getSafeRedirect(searchParams.get("redirect"));
 
   const { data: session, isPending } = authClient.useSession();
 
@@ -23,9 +30,9 @@ const LoginView = () => {
 
   useEffect(() => {
     if (!isPending && session?.user) {
-      router.replace(redirectTarget);
+      window.location.href = redirectTarget;
     }
-  }, [isPending, session, router, redirectTarget]);
+  }, [isPending, session, redirectTarget]);
 
   // Email, Password Login
   const handleSubmit = async (event) => {
@@ -46,12 +53,15 @@ const LoginView = () => {
     }
     toast.success("Welcome back to BookNook!");
 
-    router.replace(redirectTarget);
+    window.location.href = redirectTarget;
   };
 
   // Google login
   const handleGoogleLogin = async () => {
-    await authClient.signIn.social({ provider: "google" });
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: redirectTarget,
+    });
   };
 
   if (isPending || session?.user) {

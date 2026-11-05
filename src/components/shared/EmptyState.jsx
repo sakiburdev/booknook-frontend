@@ -33,7 +33,12 @@ export function ErrorState({ title, description, onRetry, retrying }) {
       </p>
 
       {onRetry ? (
-        <Button variant="outline" className="mt-6" onClick={onRetry} disabled={retrying}>
+        <Button
+          variant="outline"
+          className="mt-6"
+          onClick={onRetry}
+          disabled={retrying}
+        >
           {retrying ? "Retrying..." : "Try again"}
         </Button>
       ) : null}

@@ -27,11 +27,11 @@ export default function NotFound() {
 
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <Button size="lg" render={<Link href="/" />}>
-        <ChevronsLeft /> Back to Home
+          <ChevronsLeft /> Back to Home
         </Button>
 
         <Button size="lg" variant="outline" render={<Link href="/books" />}>
-         <BookOpen className="size-4" /> Explore Books
+          <BookOpen className="size-4" /> Explore Books
         </Button>
       </div>
     </div>

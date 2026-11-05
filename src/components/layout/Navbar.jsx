@@ -36,6 +36,7 @@ import {
   Menu,
   Moon,
   Sun,
+  User,
 } from "lucide-react";
 
 // Public navigation links
@@ -75,17 +76,28 @@ function ThemeToggle() {
 const isLinkActive = (href, pathname) =>
   href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-// Reusable navigation links
-export function NavLinks({ links, pathname }) {
+// Reusable navigation links — শুধুমাত্র redirectWhenLoggedOut মার্ক করা লিংকগুলোই
+// লগআউট ইউজারকে /login?redirect=... এ পাঠায়; পাবলিক লিংকে কখনো redirect হয় না
+export function NavLinks({
+  links,
+  pathname,
+  isLoggedIn,
+  redirectWhenLoggedOut,
+}) {
   return links.map((link) => {
     const Icon = link.icon;
+
+    const href =
+      isLoggedIn || !redirectWhenLoggedOut
+        ? link.href
+        : `/login?redirect=${encodeURIComponent(link.href)}`;
 
     return (
       <Button
         key={link.href}
         size="sm"
         variant={isLinkActive(link.href, pathname) ? "secondary" : "ghost"}
-        render={<Link href={link.href} />}
+        render={<Link href={href} />}
       >
         <Icon className="size-4" />
         {link.label}
@@ -111,7 +123,7 @@ export default function Navbar() {
 
     setMobileOpen(false);
 
-    router.replace("/login");
+    router.replace("/");
     router.refresh();
   };
 
@@ -123,10 +135,9 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4">
-
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-3 sm:gap-4 sm:px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex shrink-0 items-center gap-2">
           <Image
             src="/logo2.webp"
             alt="BookNook"
@@ -135,7 +146,7 @@ export default function Navbar() {
             className="rounded-md"
           />
 
-          <span className="text-xl font-bold">BookNook</span>
+          <span className="text-lg font-bold sm:text-xl">BookNook</span>
         </Link>
 
         {/* Desktop navigation */}
@@ -143,13 +154,16 @@ export default function Navbar() {
           <NavLinks links={publicLinks} pathname={pathname} />
 
           {isLoggedIn && (
-            <NavLinks links={privateLinks} pathname={pathname} />
+            <NavLinks
+              links={privateLinks}
+              pathname={pathname}
+              isLoggedIn={isLoggedIn}
+            />
           )}
         </nav>
 
         {/* Right side */}
         <div className="flex items-center gap-1">
-
           <ThemeToggle />
 
           {/* Authentication area */}
@@ -185,7 +199,6 @@ export default function Navbar() {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" className="w-60">
-
                 {/* IMPORTANT: GroupLabel must be inside DropdownMenuGroup */}
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>
@@ -203,19 +216,10 @@ export default function Navbar() {
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem render={<Link href="/add-book" />}>
-                  <BookPlus className="size-4" />
-                  Add Book
-                </DropdownMenuItem>
-
-                <DropdownMenuItem render={<Link href="/my-books" />}>
-                  <BookMarked className="size-4" />
-                  My Books
-                </DropdownMenuItem>
-
-                <DropdownMenuItem render={<Link href="/my-borrows" />}>
-                  <BookMarked className="size-4" />
-                  My Borrows
+                {/* Profile Page */}
+                <DropdownMenuItem render={<Link href="/profile" />}>
+                  <User className="size-4" />
+                  Profile
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
@@ -228,7 +232,6 @@ export default function Navbar() {
                   <LogOut className="size-4" />
                   Log out
                 </DropdownMenuItem>
-
               </DropdownMenuContent>
             </DropdownMenu>
           )}
@@ -245,7 +248,6 @@ export default function Navbar() {
             </SheetTrigger>
 
             <SheetContent side="right" className="flex flex-col">
-
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
                   <Library className="size-5 text-primary" />
@@ -254,7 +256,6 @@ export default function Navbar() {
               </SheetHeader>
 
               <nav className="flex flex-col gap-1 px-4">
-
                 {publicLinks.map((link) => (
                   <Link
                     key={link.href}
@@ -277,12 +278,10 @@ export default function Navbar() {
                       {link.label}
                     </Link>
                   ))}
-
               </nav>
 
               {/* Mobile authentication */}
               <div className="mt-auto flex flex-col gap-3 px-4 pb-6">
-
                 {!isLoggedIn ? (
                   <>
                     <Button
@@ -340,11 +339,9 @@ export default function Navbar() {
                     </Button>
                   </>
                 )}
-
               </div>
             </SheetContent>
           </Sheet>
-
         </div>
       </div>
     </header>

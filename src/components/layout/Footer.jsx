@@ -1,13 +1,19 @@
 import Link from "next/link";
-import { FaFacebook, FaGithub, FaYoutube } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaGithub,
+  FaYoutube,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
 import Image from "next/image";
 
 const Footer = () => {
   return (
     <footer className="mt-16 border-t bg-muted/30">
       <div className="mx-auto max-w-7xl px-4 pt-12 pb-6">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand information */}
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <Link href="/" className="flex w-fit items-center gap-2">
               <Image
@@ -124,10 +130,42 @@ const Footer = () => {
               </li>
             </ul>
           </div>
+
+          {/* Contact Info */}
+          <div>
+            <p className="mb-3 text-sm font-semibold">Contact Us</p>
+
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li className="flex items-center gap-2">
+                <FaMapMarkerAlt className="size-4 shrink-0 text-primary" />
+                <span>123 Library Street, Book City</span>
+              </li>
+
+              <li className="flex items-center gap-2">
+                <FaPhone className="size-4 shrink-0 text-primary" />
+                <a
+                  href="tel:+880123456789"
+                  className="transition-colors hover:text-primary"
+                >
+                  +880 123-456789
+                </a>
+              </li>
+
+              <li className="flex items-center gap-2">
+                <FaEnvelope className="size-4 shrink-0 text-primary" />
+                <a
+                  href="mailto:support@booknook.com"
+                  className="transition-colors hover:text-primary"
+                >
+                  support@booknook.com
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {/* Copyright */}
-        <p className="border-t mt-10 pt-6 text-center text-sm text-muted-foreground">
+        <p className="mt-10 border-t pt-6 text-center text-sm text-muted-foreground">
           © BookNook — Built with Next.js & Express. All rights reserved.
         </p>
       </div>

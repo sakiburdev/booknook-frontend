@@ -22,8 +22,11 @@ export const auth = betterAuth({
     client,
   }),
 
-   plugins: [
-      jwt(),
-    ],
-
+  plugins: [jwt({ jwt: { expirationTime: "3d" } })],
+  session: {
+    enabled: true,
+    strategy: "jwt",
+    maxAge: 3 * 24 * 60 * 60,
+    expiresIn: 3 * 24 * 60 * 60,
+  },
 });

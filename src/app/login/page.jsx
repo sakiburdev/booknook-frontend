@@ -1,6 +1,13 @@
 import { Suspense } from "react";
 import LoginView from "@/components/auth/LoginView";
 
+// Title and description
+export const metadata = {
+  title: "Login | BookNook",
+  description:
+    "Log in to your BookNook account to borrow books and manage your shelf.",
+};
+
 // Login fallback
 function LoginFallback() {
   return (
@@ -10,12 +17,11 @@ function LoginFallback() {
   );
 }
 
-const LoginPage = () => {
+// Main Page Component
+export default function LoginPage() {
   return (
     <Suspense fallback={<LoginFallback />}>
       <LoginView />
     </Suspense>
   );
-};
-
-export default LoginPage;
+}

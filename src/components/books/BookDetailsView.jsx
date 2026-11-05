@@ -2,9 +2,9 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { fetchBook, borrowBook } from "@/lib/api";
+import { authClient } from "@/lib/auth-client";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,12 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  BookOpen,
-  CalendarDays,
-  Copy,
-  LibraryBig,
-} from "lucide-react";
+import { BookOpen, CalendarDays, Copy, User } from "lucide-react";
 
 export default function BookDetailsView({ bookId }) {
   const [book, setBook] = useState(null);
@@ -73,7 +68,7 @@ export default function BookDetailsView({ bookId }) {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
+    <div className="mx-auto max-w-7xl px-4 py-10">
       <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-3">
         <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl border bg-muted shadow-xl">
           {book.image ? (
@@ -103,12 +98,21 @@ export default function BookDetailsView({ bookId }) {
             <StatCard
               icon={Copy}
               label="Available copies"
-              value={`${book.totalCopies} of yours to borrow`}
+              value={`${book.totalCopies} Copies Are Left`}
             />
             <StatCard
-              icon={LibraryBig}
-              label="Total copies"
-              value={`${book.totalCopies} in the library`}
+              icon={User}
+              label="Added by"
+              value={
+                <>
+                  {(book.userName || book.userEmail) ?? "Unknown"}
+                  {book.userEmail ? (
+                    <span className="mt-1 block text-xs font-normal text-muted-foreground">
+                      {book.userEmail}
+                    </span>
+                  ) : null}
+                </>
+              }
             />
           </div>
 
@@ -120,7 +124,7 @@ export default function BookDetailsView({ bookId }) {
 
           {/* Description */}
           <div className="mt-6">
-            <h2 className="font-semibold">About this book</h2>
+            <h2 className="font-semibold text-[20px]">Description</h2>
             <p className="mt-2 whitespace-pre-line leading-relaxed text-muted-foreground">
               {book.description || "No description was provided for this book."}
             </p>
@@ -128,7 +132,7 @@ export default function BookDetailsView({ bookId }) {
 
           {/* Actions */}
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            {/* Copies 0 হলে button disabled */}
+            {/* Copies 0 hole button disabled */}
             {book.totalCopies > 0 ? (
               <BorrowModal book={book} onBorrowed={loadBook} />
             ) : (
@@ -142,7 +146,7 @@ export default function BookDetailsView({ bookId }) {
               variant="outline"
               render={<Link href="/my-borrows" />}
             >
-              My borrows
+              My Borrows
             </Button>
           </div>
         </div>
@@ -165,8 +169,7 @@ function StatCard({ icon: Icon, label, value }) {
 
 // Borrow confirm modal
 function BorrowModal({ book, onBorrowed }) {
-  const router = useRouter();
-
+  const { data: session } = authClient.useSession();
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -198,7 +201,6 @@ function BorrowModal({ book, onBorrowed }) {
       setOpen(false);
 
       onBorrowed?.();
-      router.push("/my-borrows");
     } else {
       toast.error(data.message || "Failed to borrow this book");
     }
@@ -207,25 +209,41 @@ function BorrowModal({ book, onBorrowed }) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger render={<Button size="lg" />}>
-        Borrow this book
+        Borrow This Book
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Confirm borrow</DialogTitle>
+          <DialogTitle>Confirm Borrow</DialogTitle>
           <DialogDescription>
             One copy will be reserved in your name until the return date.
           </DialogDescription>
         </DialogHeader>
 
-        {/* Book info */}
-        <div className="space-y-2 rounded-xl border bg-muted/30 p-4 text-sm">
-          <p className="font-semibold">{book.title}</p>
-          <p className="flex items-center gap-2 text-muted-foreground">
-            <Copy className="size-4" />
-            {book.totalCopies} {book.totalCopies === 1 ? "copy" : "copies"}{" "}
-            available
-          </p>
+        {/* User Name Read Only */}
+        <div className="space-y-2">
+          <Label htmlFor="userName">User Name</Label>
+          <Input
+            id="userName"
+            type="text"
+            value={session?.user?.name || "Loading name..."}
+            readOnly
+            disabled
+            className="bg-muted cursor-not-allowed"
+          />
+        </div>
+
+        {/* User Email Read Only */}
+        <div className="space-y-2">
+          <Label htmlFor="userEmail">User Email</Label>
+          <Input
+            id="userEmail"
+            type="email"
+            value={session?.user?.email || "Loading email..."}
+            readOnly
+            disabled
+            className="bg-muted cursor-not-allowed"
+          />
         </div>
 
         {/* Return date */}

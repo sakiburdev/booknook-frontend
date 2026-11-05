@@ -13,7 +13,7 @@ export async function proxy(request) {
 
     loginUrl.searchParams.set(
       "redirect",
-      request.nextUrl.pathname + request.nextUrl.search
+      request.nextUrl.pathname + request.nextUrl.search,
     );
 
     return NextResponse.redirect(loginUrl);
@@ -24,8 +24,10 @@ export async function proxy(request) {
 
 export const config = {
   matcher: [
+    "/books/:path+",
     "/add-book/:path*",
     "/my-books/:path*",
     "/my-borrows/:path*",
+    "/profile/:path*",
   ],
 };

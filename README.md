@@ -31,4 +31,4 @@ that talks to a separate Express.js + MongoDB backend.
 
 <!-- Add your deployed URL here -->
 
-**Live URL:** _coming soon_
+**Live URL:** _https://booknook-frontend-zeta.vercel.app/

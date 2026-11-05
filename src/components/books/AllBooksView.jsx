@@ -15,7 +15,7 @@ import {
 import { LibraryBig, SearchX } from "lucide-react";
 import BookCard, { BookCardSkeleton } from "../shared/BookCard";
 
-const API_URL = "http://localhost:8000/books";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const PAGE_SIZE = 6;
 
 const AllBooksView = () => {
@@ -34,7 +34,7 @@ const AllBooksView = () => {
   useEffect(() => {
     const getBooks = async () => {
       try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(`${API_URL}/books`, {
           method: "GET",
         });
 

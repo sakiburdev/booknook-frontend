@@ -32,7 +32,7 @@ const LatestBooks = () => {
   const shownBooks = books.slice(0, PAGE_SIZE);
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-16">
+    <section className="mx-auto max-w-7xl px-4 py-16">
       <div className="mb-8 text-center">
         <p className="text-sm font-medium text-primary">Fresh off the shelf</p>
         <h2 className="mt-1 text-3xl font-bold md:text-4xl">Latest Books</h2>
